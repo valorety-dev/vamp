@@ -1,0 +1,19 @@
+.main-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #0a0a0a;
+}
+
+.content-area {
+  flex: 1;
+  margin-left: 280px;
+  padding: 40px;
+  min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .content-area {
+    margin-left: 0;
+    padding: 20px;
+  }
+}
