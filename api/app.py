@@ -9,12 +9,15 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
-CORS(app, supports_credentials=True, origins=['http://localhost:3000'])
+
+# Get frontend URL from environment or use default
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
+CORS(app, supports_credentials=True, origins=[FRONTEND_URL, 'https://vamp-zeta.vercel.app'])
 
 # Discord OAuth2 Config
 CLIENT_ID = os.getenv('DISCORD_CLIENT_ID')
 CLIENT_SECRET = os.getenv('DISCORD_CLIENT_SECRET')
-REDIRECT_URI = 'http://localhost:5000/api/auth/callback'
+REDIRECT_URI = os.getenv('REDIRECT_URI', 'http://localhost:5000/api/auth/callback')
 DISCORD_API_URL = 'https://discord.com/api/v10'
 
 @app.route('/api/auth/login')
@@ -27,7 +30,7 @@ def login():
 def callback():
     code = request.args.get('code')
     if not code:
-        return redirect('http://localhost:3000?error=no_code')
+        return redirect(f'{FRONTEND_URL}?error=no_code')
     
     # Exchange code for access token
     data = {
@@ -43,7 +46,7 @@ def callback():
     response = requests.post(f'{DISCORD_API_URL}/oauth2/token', data=data, headers=headers)
     
     if response.status_code != 200:
-        return redirect('http://localhost:3000?error=token_exchange_failed')
+        return redirect(f'{FRONTEND_URL}?error=token_exchange_failed')
     
     credentials = response.json()
     access_token = credentials['access_token']
@@ -67,7 +70,7 @@ def callback():
             break
     
     if not has_admin:
-        return redirect('http://localhost:3000?error=no_admin_perms')
+        return redirect(f'{FRONTEND_URL}?error=no_admin_perms')
     
     # Store user session
     session['user'] = {
@@ -78,7 +81,7 @@ def callback():
         'access_token': access_token
     }
     
-    return redirect('http://localhost:3000/dashboard')
+    return redirect(f'{FRONTEND_URL}/dashboard')
 
 @app.route('/api/auth/user')
 def get_user():
@@ -116,4 +119,5 @@ def get_stats():
     })
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    port = int(os.getenv('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
