@@ -12,7 +12,13 @@ app.secret_key = secrets.token_hex(32)
 
 # Get frontend URL from environment or use default
 FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
-CORS(app, supports_credentials=True, origins=[FRONTEND_URL, 'https://vamp-zeta.vercel.app'])
+
+# Configure CORS properly
+CORS(app, 
+     supports_credentials=True, 
+     origins=['http://localhost:3000', 'https://vamp-zeta.vercel.app'],
+     allow_headers=['Content-Type', 'Authorization'],
+     methods=['GET', 'POST', 'OPTIONS'])
 
 # Discord OAuth2 Config
 CLIENT_ID = os.getenv('DISCORD_CLIENT_ID')
