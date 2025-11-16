@@ -23,7 +23,7 @@ CORS(app,
 # Discord OAuth2 Config
 CLIENT_ID = os.getenv('DISCORD_CLIENT_ID')
 CLIENT_SECRET = os.getenv('DISCORD_CLIENT_SECRET')
-REDIRECT_URI = os.getenv('REDIRECT_URI', 'http://localhost:5000/api/auth/callback')
+REDIRECT_URI = 'https://vamp-production-334f.up.railway.app/api/auth/callback'
 DISCORD_API_URL = 'https://discord.com/api/v10'
 
 @app.route('/api/auth/login')
@@ -125,5 +125,5 @@ def get_stats():
     })
 
 if __name__ == '__main__':
-    port = int(os.getenv('PORT', 5000))
+    port = int(os.getenv('PORT', 8080))
     app.run(host='0.0.0.0', port=port, debug=False)
