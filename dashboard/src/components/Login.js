@@ -86,8 +86,10 @@ function Login() {
             animate={{ opacity: 1, scale: 1 }}
           >
             {error === 'no_admin_perms' && '⚠️ Administrator permissions required'}
-            {error === 'no_code' && '⚠️ Authentication failed'}
-            {error === 'token_exchange_failed' && '⚠️ Discord authentication error'}
+            {error === 'no_code' && '⚠️ Authentication failed - no code received'}
+            {error === 'token_exchange_failed' && '⚠️ Discord authentication error - check server logs or try again'}
+            {error.startsWith('discord_') && `⚠️ Discord error: ${error.replace('discord_', '')}`}
+            {!['no_admin_perms', 'no_code', 'token_exchange_failed'].includes(error) && !error.startsWith('discord_') && `⚠️ Error: ${error}`}
           </motion.div>
         )}
 

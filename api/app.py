@@ -41,7 +41,15 @@ def login():
 @app.route('/api/auth/callback')
 def callback():
     code = request.args.get('code')
+    error = request.args.get('error')
+    
+    # Check if Discord returned an error
+    if error:
+        print(f"Discord OAuth error: {error}")
+        return redirect(f'{FRONTEND_URL}?error=discord_{error}')
+    
     if not code:
+        print("No code provided in callback")
         return redirect(f'{FRONTEND_URL}?error=no_code')
     
     # Exchange code for access token
@@ -55,10 +63,13 @@ def callback():
     
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     
+    print(f"Attempting token exchange with redirect_uri: {REDIRECT_URI}")
     response = requests.post(f'{DISCORD_API_URL}/oauth2/token', data=data, headers=headers)
     
     if response.status_code != 200:
-        print(f"Token exchange failed: {response.status_code} - {response.text}")
+        error_data = response.json() if response.headers.get('content-type') == 'application/json' else response.text
+        print(f"Token exchange failed: {response.status_code}")
+        print(f"Error details: {error_data}")
         return redirect(f'{FRONTEND_URL}?error=token_exchange_failed')
     
     credentials = response.json()
