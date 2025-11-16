@@ -17,6 +17,17 @@ function Login() {
 
   const error = new URLSearchParams(location.search).get('error');
 
+  const handleLogin = () => {
+    // Clear any existing errors by navigating to clean URL first
+    if (error) {
+      navigate('/');
+      // Small delay to ensure URL is updated before redirect
+      setTimeout(() => login(), 100);
+    } else {
+      login();
+    }
+  };
+
   return (
     <div className="login-page">
       <nav className="top-nav">
@@ -82,7 +93,7 @@ function Login() {
 
         <motion.button 
           className="cta-button"
-          onClick={login}
+          onClick={handleLogin}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}

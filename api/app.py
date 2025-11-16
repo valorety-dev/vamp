@@ -58,6 +58,7 @@ def callback():
     response = requests.post(f'{DISCORD_API_URL}/oauth2/token', data=data, headers=headers)
     
     if response.status_code != 200:
+        print(f"Token exchange failed: {response.status_code} - {response.text}")
         return redirect(f'{FRONTEND_URL}?error=token_exchange_failed')
     
     credentials = response.json()
@@ -116,6 +117,15 @@ def get_user():
 def logout():
     session.clear()
     return jsonify({'success': True})
+
+@app.route('/api/debug')
+def debug():
+    return jsonify({
+        'client_id': CLIENT_ID[:10] + '...' if CLIENT_ID else 'NOT SET',
+        'has_secret': bool(CLIENT_SECRET),
+        'redirect_uri': REDIRECT_URI,
+        'frontend_url': FRONTEND_URL
+    })
 
 @app.route('/api/stats')
 def get_stats():
