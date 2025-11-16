@@ -7,56 +7,94 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
-      <div className="dashboard-header">
-        <h1 className="page-title">Dashboard Overview</h1>
-        <p className="page-subtitle">Welcome back, {user?.username || 'Admin'}</p>
-      </div>
-
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-label">Total Servers</div>
-          <div className="stat-value">1</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">Total Members</div>
-          <div className="stat-value">847</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">Commands Used</div>
-          <div className="stat-value">1,234</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">Bot Uptime</div>
-          <div className="stat-value">99.9%</div>
+      <div className="page-header">
+        <div>
+          <h1>Dashboard</h1>
+          <p>Welcome back, {user?.username || 'Admin'}</p>
         </div>
       </div>
 
-      <div className="features-section">
-        <h2 className="section-title">Quick Actions</h2>
+      <div className="stats-container">
+        <div className="stat-box">
+          <div className="stat-header">Servers</div>
+          <div className="stat-number">1</div>
+          <div className="stat-footer">Active servers</div>
+        </div>
         
-        <div className="features-grid">
-          <div className="feature-item">
-            <div className="feature-info">
-              <h3>Moderation Tools</h3>
-              <p>Manage kicks, bans, and mutes</p>
+        <div className="stat-box">
+          <div className="stat-header">Members</div>
+          <div className="stat-number">847</div>
+          <div className="stat-footer">Total members</div>
+        </div>
+        
+        <div className="stat-box">
+          <div className="stat-header">Commands</div>
+          <div className="stat-number">1,234</div>
+          <div className="stat-footer">Total executed</div>
+        </div>
+        
+        <div className="stat-box">
+          <div className="stat-header">Uptime</div>
+          <div className="stat-number">99.9%</div>
+          <div className="stat-footer">Last 30 days</div>
+        </div>
+      </div>
+
+      <div className="content-section">
+        <div className="section-header">
+          <h2>Quick Actions</h2>
+        </div>
+        
+        <div className="action-grid">
+          <button className="action-box">
+            <div className="action-title">Moderation</div>
+            <div className="action-description">Manage members and permissions</div>
+          </button>
+          
+          <button className="action-box">
+            <div className="action-title">Analytics</div>
+            <div className="action-description">View detailed statistics</div>
+          </button>
+          
+          <button className="action-box">
+            <div className="action-title">Commands</div>
+            <div className="action-description">Configure bot commands</div>
+          </button>
+          
+          <button className="action-box">
+            <div className="action-title">Settings</div>
+            <div className="action-description">Manage bot configuration</div>
+          </button>
+        </div>
+      </div>
+
+      <div className="content-section">
+        <div className="section-header">
+          <h2>Recent Activity</h2>
+        </div>
+        
+        <div className="activity-container">
+          <div className="activity-item">
+            <div className="activity-dot"></div>
+            <div className="activity-content">
+              <div className="activity-title">Member joined</div>
+              <div className="activity-time">2 minutes ago</div>
             </div>
           </div>
-          <div className="feature-item">
-            <div className="feature-info">
-              <h3>Server Analytics</h3>
-              <p>View detailed server statistics</p>
+          
+          <div className="activity-item">
+            <div className="activity-dot"></div>
+            <div className="activity-content">
+              <div className="activity-title">Command executed</div>
+              <div className="activity-time">15 minutes ago</div>
             </div>
           </div>
-          <div className="feature-item">
-            <div className="feature-info">
-              <h3>Command Management</h3>
-              <p>Configure bot commands</p>
-            </div>
-          </div>
-          <div className="feature-item">
-            <div className="feature-info">
-              <h3>Role Management</h3>
-              <p>Assign and manage server roles</p>
+          
+          <div className="activity-item">
+            <div className="activity-dot"></div>
+            <div className="activity-content">
+              <div className="activity-title">Role updated</div>
+              <div className="activity-time">1 hour ago</div>
             </div>
           </div>
         </div>
