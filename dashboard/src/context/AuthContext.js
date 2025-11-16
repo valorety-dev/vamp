@@ -29,13 +29,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/api/auth/login`);
-      window.location.href = response.data.url;
-    } catch (error) {
-      console.error('Login error:', error);
-    }
+  const login = () => {
+    // Directly redirect to the OAuth endpoint
+    window.location.href = `${API_URL}/api/auth/login`;
   };
 
   const logout = async () => {

@@ -8,15 +8,22 @@ import secrets
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = secrets.token_hex(32)
+app.secret_key = os.getenv('SECRET_KEY', secrets.token_hex(32))
 
 # Get frontend URL from environment or use default
 FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
 
+# Session configuration for production
+app.config['SESSION_COOKIE_SECURE'] = True  # Only send cookie over HTTPS
+app.config['SESSION_COOKIE_HTTPONLY'] = True  # Prevent JavaScript access
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'  # Allow cross-site cookies
+app.config['SESSION_COOKIE_DOMAIN'] = None  # Don't restrict domain
+app.config['PERMANENT_SESSION_LIFETIME'] = 86400  # 24 hours
+
 # Configure CORS properly
 CORS(app, 
      supports_credentials=True, 
-     origins=['http://localhost:3000', 'https://vamp-zeta.vercel.app'],
+     origins=['http://localhost:3000', 'https://vamp-zeta.vercel.app', 'https://vamp-production-334f.up.railway.app'],
      allow_headers=['Content-Type', 'Authorization'],
      methods=['GET', 'POST', 'OPTIONS'])
 
@@ -28,9 +35,8 @@ DISCORD_API_URL = 'https://discord.com/api/v10'
 
 @app.route('/api/auth/login')
 def login():
-    return jsonify({
-        'url': f'https://discord.com/api/oauth2/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code&scope=identify%20guilds'
-    })
+    oauth_url = f'https://discord.com/api/oauth2/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code&scope=identify%20guilds'
+    return redirect(oauth_url)
 
 @app.route('/api/auth/callback')
 def callback():
@@ -79,6 +85,7 @@ def callback():
         return redirect(f'{FRONTEND_URL}?error=no_admin_perms')
     
     # Store user session
+    session.permanent = True
     session['user'] = {
         'id': user['id'],
         'username': user['username'],
@@ -105,7 +112,7 @@ def get_user():
         }
     })
 
-@app.route('/api/auth/logout')
+@app.route('/api/auth/logout', methods=['POST'])
 def logout():
     session.clear()
     return jsonify({'success': True})
